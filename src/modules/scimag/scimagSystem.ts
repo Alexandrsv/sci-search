@@ -33,7 +33,7 @@ export const searchArticles = async ({
       author
     FROM scimag
     WHERE to_tsvector('english', title) @@ websearch_to_tsquery('english', ${query})
-    -- ORDER BY citation_count DESC NULLS LAST
+    ORDER BY citation_count DESC NULLS LAST
     LIMIT ${limit}
     OFFSET ${offset}
   `;

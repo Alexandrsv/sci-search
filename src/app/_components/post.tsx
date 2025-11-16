@@ -1,128 +1,225 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { api } from "@/trpc/react";
 import { SearchSettings } from "./SearchSettings";
 
 type SearchField = "title" | "abstract" | "author";
 
+interface Article {
+	id: number;
+	doi: string;
+	title: string;
+	author: string;
+	year: number;
+	abstract?: string;
+	citation_count: number;
+	highlighted_title: string;
+}
+
+interface ArticlesResponse {
+	articles: Article[];
+	total: number;
+	hasMore: boolean;
+}
+
 export function ArticlesList() {
-	const [search, setSearch] = useState("");
-	const [searchIn, setSearchIn] = useState<SearchField[]>(["title"]);
-	const [limit, setLimit] = useState(10);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [searchFields, setSearchFields] = useState<SearchField[]>(["title"]);
+	const [limit] = useState(10);
 	const [offset, setOffset] = useState(0);
 	const [hasSearched, setHasSearched] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
 
-	const { data, isLoading } = api.scimag.getArticles.useQuery(
-		{
-			search: search || undefined,
-			searchIn,
+	const searchParams = useMemo(
+		() => ({
+			search: searchQuery || undefined,
+			searchIn: searchFields,
 			limit,
 			offset,
-		},
+		}),
+		[searchQuery, searchFields, limit, offset],
+	);
+
+	const { data, isLoading, error } = api.scimag.getArticles.useQuery(
+		searchParams,
 		{
-			enabled: hasSearched && !!search.trim(),
+			enabled: hasSearched && !!searchQuery.trim(),
 		},
 	);
 
 	const utils = api.useUtils();
 
-	const handleSearch = () => {
+	const handleSearch = useCallback(() => {
+		if (!searchQuery.trim()) return;
+
 		setOffset(0);
+		setCurrentPage(1);
 		setHasSearched(true);
 		utils.scimag.getArticles.invalidate();
-	};
+	}, [searchQuery, utils]);
 
-	const renderHighlightedText = (
-		text: string | null,
-		highlightedField?: string,
-	) => {
-		if (!text) return null;
+	const handleNextPage = useCallback(() => {
+		if (!data?.hasMore) return;
+		setOffset((prev) => prev + limit);
+		setCurrentPage((prev) => prev + 1);
+	}, [data?.hasMore, limit]);
 
-		// Если есть highlighted версия, используем её
-		if (highlightedField && (data as any)?.articles?.[0]?.[highlightedField]) {
-			return (
-				<span
-					dangerouslySetInnerHTML={{
-						__html: (data as any).articles[0][highlightedField],
-					}}
-				/>
-			);
-		}
+	const handlePrevPage = useCallback(() => {
+		if (currentPage <= 1) return;
+		setOffset((prev) => Math.max(0, prev - limit));
+		setCurrentPage((prev) => Math.max(1, prev - 1));
+	}, [currentPage, limit]);
 
-		return text;
-	};
+	const handleKeyPress = useCallback(
+		(event: React.KeyboardEvent<HTMLInputElement>) => {
+			if (event.key === "Enter") {
+				handleSearch();
+			}
+		},
+		[handleSearch],
+	);
 
-	if (isLoading) {
-		return <div className="text-white">Loading articles...</div>;
+	if (error) {
+		return (
+			<div className="py-8 text-center text-red-400">
+				Ошибка загрузки статей: {error.message}
+			</div>
+		);
 	}
 
 	return (
-		<div className="flex w-full max-w-6xl gap-6">
+		<div className="flex w-full max-w-7xl gap-8">
 			{/* Sidebar с настройками поиска */}
 			<aside className="w-80 flex-shrink-0">
-				<SearchSettings onSearchInChange={setSearchIn} searchIn={searchIn} />
+				<SearchSettings
+					onSearchInChange={setSearchFields}
+					searchIn={searchFields}
+				/>
 			</aside>
 
 			{/* Основной контент */}
-			<div className="flex-1">
-				<div className="mb-6">
-					<input
-						className="w-full border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
-						onChange={(e) => setSearch(e.target.value)}
-						placeholder="Search articles..."
-						type="text"
-						value={search}
-					/>
-					<button
-						className="mt-3 border border-slate-600/50 bg-slate-700/70 px-6 py-2 font-semibold shadow-md transition-all duration-200 hover:bg-slate-600/70 hover:shadow-lg"
-						onClick={handleSearch}
-						type="button"
-					>
-						Search
-					</button>
-				</div>
-
-				<div className="space-y-4">
-					{data?.articles.map((article: any) => (
-						<div
-							className="border border-slate-600/50 bg-slate-800/50 p-6 shadow-lg transition-all duration-300 hover:bg-slate-700/70 hover:shadow-xl"
-							key={article.id}
+			<div className="min-w-0 flex-1">
+				{/* Search Form */}
+				<div className="mb-8">
+					<div className="flex gap-3">
+						<input
+							className="flex-1 rounded-md border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
+							onChange={(e) => setSearchQuery(e.target.value)}
+							onKeyPress={handleKeyPress}
+							placeholder="Введите поисковый запрос..."
+							type="text"
+							value={searchQuery}
+						/>
+						<button
+							className="rounded-md bg-cyan-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={!searchQuery.trim() || isLoading}
+							onClick={handleSearch}
+							type="button"
 						>
-							<h3 className="font-bold text-white text-xl">
-								<span
-									dangerouslySetInnerHTML={{
-										__html: article.highlighted_title,
-									}}
-								/>
-							</h3>
-							<p className="text-sm text-white/70">
-								{article.author} • {article.year}
-							</p>
-							<p className="text-sm text-white/70">DOI: {article.doi}</p>
-							{article.abstract && (
-								<p className="mt-2 text-white/80">{article.abstract}</p>
-							)}
-							<p className="mt-2 text-cyan-400 text-sm">
-								Цитаты: {article.citation_count}
-							</p>
-						</div>
-					))}
+							{isLoading ? "Поиск..." : "Поиск"}
+						</button>
+					</div>
 				</div>
 
-				{data?.hasMore && (
-					<button
-						className="mt-6 border border-slate-600/50 bg-slate-700/70 px-6 py-3 font-semibold shadow-md transition-all duration-200 hover:bg-slate-600/70 hover:shadow-lg"
-						onClick={() => {
-							setOffset(offset + limit);
-						}}
-						type="button"
-					>
-						Load More
-					</button>
+				{/* Loading State */}
+				{isLoading && (
+					<div className="py-8 text-center">
+						<div className="text-white">Загрузка статей...</div>
+					</div>
+				)}
+
+				{/* Results */}
+				{!isLoading && hasSearched && (
+					<>
+						{/* Results Info */}
+						<div className="mb-6 text-slate-300">
+							{data?.articles && data.articles.length > 0 ? (
+								<p>Найдено статей: {data.total}</p>
+							) : searchQuery.trim() ? (
+								<p>Статьи не найдены</p>
+							) : null}
+						</div>
+
+						{/* Articles List */}
+						<div className="space-y-6">
+							{data?.articles.map((article) => (
+								<ArticleCard article={article} key={article.id} />
+							))}
+						</div>
+
+						{/* Pagination */}
+						<div className="mt-8 flex items-center justify-center gap-4">
+							<button
+								className="rounded-md border border-slate-600/50 bg-slate-700/70 px-4 py-2 font-semibold text-white transition-colors hover:bg-slate-600/70 disabled:cursor-not-allowed disabled:opacity-50"
+								disabled={currentPage <= 1}
+								onClick={handlePrevPage}
+								type="button"
+							>
+								Назад
+							</button>
+
+							<span className="text-slate-300">Страница {currentPage}</span>
+
+							<button
+								className="rounded-md border border-slate-600/50 bg-slate-700/70 px-4 py-2 font-semibold text-white transition-colors hover:bg-slate-600/70 disabled:cursor-not-allowed disabled:opacity-50"
+								disabled={!data?.hasMore}
+								onClick={handleNextPage}
+								type="button"
+							>
+								Вперед
+							</button>
+						</div>
+					</>
+				)}
+
+				{/* Initial State */}
+				{!hasSearched && (
+					<div className="py-16 text-center">
+						<p className="text-lg text-slate-400">
+							Введите запрос для поиска научных статей
+						</p>
+					</div>
 				)}
 			</div>
+		</div>
+	);
+}
+
+function ArticleCard({ article }: { article: Article }) {
+	return (
+		<div className="rounded-lg border border-slate-600/50 bg-slate-800/50 p-6 shadow-lg transition-all duration-300 hover:bg-slate-700/70 hover:shadow-xl">
+			<h3 className="mb-2 font-bold text-white text-xl">
+				<span
+					dangerouslySetInnerHTML={{
+						__html: article.highlighted_title,
+					}}
+				/>
+			</h3>
+
+			<div className="space-y-2 text-slate-300 text-sm">
+				<p>
+					<span className="font-medium">Автор:</span> {article.author}
+				</p>
+				<p>
+					<span className="font-medium">Год:</span> {article.year}
+				</p>
+				<p>
+					<span className="font-medium">DOI:</span> {article.doi}
+				</p>
+				<p>
+					<span className="font-medium text-cyan-400">Цитаты:</span>{" "}
+					{article.citation_count}
+				</p>
+			</div>
+
+			{article.abstract && (
+				<div className="mt-4">
+					<h4 className="mb-2 font-medium text-white">Аннотация:</h4>
+					<p className="text-slate-200 leading-relaxed">{article.abstract}</p>
+				</div>
+			)}
 		</div>
 	);
 }

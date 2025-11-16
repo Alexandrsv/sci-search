@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model error_report {
+  id         BigInt   @id(map: "idx_42686_primary") @default(autoincrement())
+  error_type String   @db.VarChar(45)
+  doi        String   @db.VarChar(100)
+  message    String   @db.VarChar(500)
+  timeadded  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model magazines {
+  id             BigInt   @id(map: "idx_42699_primary") @default(autoincrement())
+  issnp          String   @default("") @db.VarChar(10)
+  issne          String   @default("") @db.VarChar(10)
+  magazine       String   @default("") @db.VarChar(300)
+  abbr           String   @default("") @db.VarChar(900)
+  description    String
+  publisher      String   @default("") @db.VarChar(400)
+  journalid      String   @default("") @db.VarChar(45)
+  site_url       String   @default("") @db.VarChar(128)
+  category       String   @default("") @db.VarChar(445)
+  siteid_old     String   @default("") @db.VarChar(45)
+  previous_title String   @default("") @db.VarChar(300)
+  real_title     String   @default("") @db.VarChar(300)
+  years          String   @default("") @db.VarChar(100)
+  volumes        String   @default("") @db.VarChar(100)
+  prefix         String   @default("") @db.VarChar(100)
+  timeadded      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([issne], map: "idx_42699_issne")
+  @@index([issnp], map: "idx_42699_issnp")
+  @@index([journalid], map: "idx_42699_journalid")
+  @@index([magazine], map: "idx_42699_magazine")
+  @@index([site_url], map: "idx_42699_siteurl")
+}
+
+model publishers {
+  id        BigInt @id(map: "idx_42738_primary") @default(autoincrement())
+  doicode   String @unique(map: "idx_42738_doicodeunique") @default("") @db.VarChar(30)
+  publisher String @default("") @db.VarChar(300)
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model scimag {
+  id             BigInt    @id(map: "idx_42748_primary") @default(autoincrement())
+  doi            String    @unique(map: "idx_42748_doiunique") @db.VarChar(200)
+  doi2           String    @default("") @db.VarChar(100)
+  title          String    @default("") @db.VarChar(2000)
+  author         String    @default("") @db.VarChar(2000)
+  year           String    @default("") @db.VarChar(10)
+  month          String    @default("") @db.VarChar(10)
+  day            String    @default("") @db.VarChar(10)
+  volume         String    @default("") @db.VarChar(45)
+  issue          String    @default("") @db.VarChar(95)
+  first_page     String    @default("") @db.VarChar(45)
+  last_page      String    @default("") @db.VarChar(45)
+  journal        String    @default("") @db.VarChar(500)
+  isbn           String    @default("") @db.VarChar(500)
+  issnp          String    @default("") @db.VarChar(11)
+  issne          String    @default("") @db.VarChar(10)
+  md5            String    @default("") @db.VarChar(32)
+  filesize       BigInt
+  timeadded      DateTime? @db.Timestamptz(6)
+  journalid      String    @default("") @db.VarChar(45)
+  abstracturl    String    @default("") @db.VarChar(500)
+  attribute1     String    @default("") @db.VarChar(500)
+  attribute2     String    @default("") @db.VarChar(1000)
+  attribute3     String    @default("") @db.VarChar(2000)
+  attribute4     String?   @default("") @db.VarChar(5000)
+  attribute5     String    @default("") @db.VarChar(256)
+  attribute6     String    @default("") @db.VarChar(45)
+  visible        String    @default("") @db.Char(3)
+  pubmedid       String    @default("") @db.VarChar(10)
+  pmc            String    @default("") @db.VarChar(12)
+  pii            String    @default("") @db.VarChar(45)
+  citation_count BigInt?   @default(0)
+  abstract       String?
+  type           String?
+
+  @@index([issne], map: "idx_42748_issneindex")
+  @@index([issnp], map: "idx_42748_issnpindex")
+  @@index([issue], map: "idx_42748_issueindex")
+  @@index([md5], map: "idx_42748_md5")
+  @@index([pubmedid], map: "idx_42748_pubmedindex")
+  @@index([visible, id], map: "idx_42748_visibleid")
+  @@index([volume], map: "idx_42748_volumeindex")
+  @@index([abstract(ops: raw("gin_trgm_ops"))], map: "idx_scimag_abstract_gin", type: Gin)
+  @@index([author(ops: raw("gin_trgm_ops"))], map: "idx_scimag_author_gin", type: Gin)
+  @@index([citation_count], map: "idx_scimag_citation_count")
+  @@index([doi2], map: "idx_scimag_doi2")
+  @@index([journalid], map: "idx_scimag_journalid")
+  @@index([title(ops: raw("gin_trgm_ops"))], map: "idx_scimag_title_gin", type: Gin)
+  @@index([type], map: "idx_scimag_type")
+  @@index([year], map: "idx_scimag_year")
+}

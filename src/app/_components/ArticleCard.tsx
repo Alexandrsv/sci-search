@@ -1,3 +1,5 @@
+import { CopyButton } from "./CopyButton";
+
 interface Article {
 	id: number;
 	doi: string;
@@ -28,8 +30,9 @@ const ArticleCard = ({ article }: { article: Article }) => {
 				<p>
 					<span className="font-medium">Год:</span> {article.year}
 				</p>
-				<p>
-					<span className="font-medium">DOI:</span> {article.doi}
+				<p className="flex items-center">
+					<span className="font-medium">DOI:</span>
+					<CopyButton text={article.doi}>{article.doi}</CopyButton>
 				</p>
 				<p>
 					<span className="font-medium text-cyan-400">Цитаты:</span>{" "}

@@ -2,12 +2,11 @@
 
 import { useCallback } from "react";
 
-type SearchField = "title" | "abstract" | "author";
+type SearchField = "title" | "abstract";
 
 const SEARCH_FIELD_LABELS: Record<SearchField, string> = {
 	title: "Название",
 	abstract: "Аннотация",
-	author: "Автор",
 };
 
 interface SearchSettingsProps {

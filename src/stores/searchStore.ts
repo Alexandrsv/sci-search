@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type SearchField = "title" | "abstract" | "author";
+export type SearchField = "title" | "abstract";
 
 interface SearchStore {
 	// Search settings

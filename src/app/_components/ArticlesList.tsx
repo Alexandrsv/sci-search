@@ -73,9 +73,9 @@ export const ArticlesList = () => {
 	}
 
 	return (
-		<div className="flex w-full max-w-7xl gap-8">
+		<div className="flex w-full max-w-7xl flex-wrap gap-8">
 			{/* Sidebar с настройками поиска */}
-			<aside className="w-80 flex-shrink-0">
+			<aside className="w-full flex-shrink-0 md:w-80">
 				<SearchSettings
 					onSearchInChange={setTempSearchFields}
 					searchIn={tempSearchFields}
@@ -83,7 +83,7 @@ export const ArticlesList = () => {
 			</aside>
 
 			{/* Основной контент */}
-			<div className="min-w-0 flex-1">
+			<div className="w-full min-w-0 flex-1 md:min-w-0 md:flex-1">
 				{/* Search Form */}
 				<form
 					className="mb-8"

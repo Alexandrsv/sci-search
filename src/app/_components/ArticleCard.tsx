@@ -35,7 +35,9 @@ const ArticleCard = ({ article }: { article: Article }) => {
 					<CopyButton text={article.doi}>{article.doi}</CopyButton>
 				</p>
 				<p>
-					<span className="font-medium text-cyan-400">Цитаты:</span>{" "}
+					<span className="font-medium text-cyan-400">
+						Вероятная цитируемость:
+					</span>{" "}
 					{article.citation_count}
 				</p>
 			</div>

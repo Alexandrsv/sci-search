@@ -1,7 +1,18 @@
-import { Prisma } from "generated/prisma";
 import { db } from "@/server/db";
 
-type SearchField = "title" | "abstract" | "author";
+export type SearchField = "title" | "abstract" | "author";
+
+interface ArticleResult {
+	id: number;
+	doi: string;
+	citation_count: number;
+	year: number;
+	title: string;
+	highlighted_title: string;
+	abstract: string;
+	highlighted_abstract: string;
+	author: string;
+}
 
 interface SearchParams {
 	query: string;
@@ -35,7 +46,7 @@ export const searchArticlesByTitle = async ({
 	limit = 20,
 	offset = 0,
 }: Omit<SearchParams, "searchIn">) => {
-	const results = await db.$queryRaw<any[]>`
+	const results = await db.$queryRaw<ArticleResult[]>`
     SELECT
       id,
       doi,
@@ -71,7 +82,7 @@ export const searchArticlesByAbstract = async ({
 	limit = 20,
 	offset = 0,
 }: Omit<SearchParams, "searchIn">) => {
-	const results = await db.$queryRaw<any[]>`
+	const results = await db.$queryRaw<ArticleResult[]>`
     SELECT
       id,
       doi,
@@ -107,7 +118,7 @@ export const searchArticlesByALL = async ({
 	limit = 20,
 	offset = 0,
 }: Omit<SearchParams, "searchIn">) => {
-	const results = await db.$queryRaw<any[]>`
+	const results = await db.$queryRaw<ArticleResult[]>`
     SELECT
       id,
       doi,
@@ -125,17 +136,13 @@ export const searchArticlesByALL = async ({
         'english',
         abstract,
         websearch_to_tsquery('english', ${query}),
-        'StartSel=<mark>, StopSel=</mark>'
+        'StartSel=<mark>, StopSel=</mark>, MaxWords=100, MaxFragments=2'
       ) as highlighted_abstract,
-      author,
-      ts_headline(
-        'english',
-        author,
-        websearch_to_tsquery('english', ${query}),
-        'StartSel=<mark>, StopSel=</mark>'
-      ) as highlighted_author
+      author
     FROM scimag
-    WHERE to_tsvector('english', title || ' ' || abstract || ' ' || author) @@ websearch_to_tsquery('english', ${query})
+    WHERE 
+      to_tsvector('english', title) @@ websearch_to_tsquery('english', ${query})
+      OR to_tsvector('english', abstract) @@ websearch_to_tsquery('english', ${query})
     ORDER BY citation_count DESC NULLS LAST
     LIMIT ${limit}
     OFFSET ${offset}

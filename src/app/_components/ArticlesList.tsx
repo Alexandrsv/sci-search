@@ -1,23 +1,24 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-
+import { useSearchStore } from "@/stores/searchStore";
+import { useTempSearchStore } from "@/stores/tempSearchStore";
 import { api } from "@/trpc/react";
 import { type Article, ArticleCard } from "./ArticleCard";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { SearchSettings } from "./SearchSettings";
 
-type SearchField = "title" | "abstract" | "author";
-
-interface ArticlesResponse {
-	articles: Article[];
-	total: number;
-	hasMore: boolean;
-}
-
 export const ArticlesList = () => {
-	const [searchQuery, setSearchQuery] = useState("");
-	const [searchFields, setSearchFields] = useState<SearchField[]>(["title"]);
+	// Use Zustand stores
+	const { searchQuery, searchFields } = useSearchStore();
+	const {
+		tempSearchQuery,
+		tempSearchFields,
+		setTempSearchQuery,
+		setTempSearchFields,
+		transferToSearch,
+	} = useTempSearchStore();
+
 	const [limit] = useState(10);
 	const [offset, setOffset] = useState(0);
 	const [hasSearched, setHasSearched] = useState(false);
@@ -63,15 +64,6 @@ export const ArticlesList = () => {
 		setCurrentPage((prev) => Math.max(1, prev - 1));
 	}, [currentPage, limit]);
 
-	const handleKeyPress = useCallback(
-		(event: React.KeyboardEvent<HTMLInputElement>) => {
-			if (event.key === "Enter") {
-				handleSearch();
-			}
-		},
-		[handleSearch],
-	);
-
 	if (error) {
 		return (
 			<div className="py-8 text-center text-red-400">
@@ -85,34 +77,39 @@ export const ArticlesList = () => {
 			{/* Sidebar с настройками поиска */}
 			<aside className="w-80 flex-shrink-0">
 				<SearchSettings
-					onSearchInChange={setSearchFields}
-					searchIn={searchFields}
+					onSearchInChange={setTempSearchFields}
+					searchIn={tempSearchFields}
 				/>
 			</aside>
 
 			{/* Основной контент */}
 			<div className="min-w-0 flex-1">
 				{/* Search Form */}
-				<div className="mb-8">
+				<form
+					className="mb-8"
+					onSubmit={async (e) => {
+						e.preventDefault();
+						await transferToSearch();
+						handleSearch();
+					}}
+				>
 					<div className="flex gap-3">
 						<input
 							className="flex-1 rounded-md border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
-							onChange={(e) => setSearchQuery(e.target.value)}
-							onKeyPress={handleKeyPress}
+							onChange={(e) => setTempSearchQuery(e.target.value)}
 							placeholder="Введите поисковый запрос..."
 							type="text"
-							value={searchQuery}
+							value={tempSearchQuery}
 						/>
 						<button
 							className="rounded-md bg-cyan-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={!searchQuery.trim() || isLoading}
-							onClick={handleSearch}
-							type="button"
+							disabled={!tempSearchQuery.trim() || isLoading}
+							type="submit"
 						>
 							{isLoading ? "Поиск..." : "Поиск"}
 						</button>
 					</div>
-				</div>
+				</form>
 
 				{/* Loading State */}
 				{isLoading && <LoadingSpinner message="Загрузка статей..." />}

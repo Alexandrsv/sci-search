@@ -85,7 +85,7 @@ export const ArticlesList = () => {
 	return (
 		<div className="flex w-full max-w-7xl flex-wrap gap-8">
 			{/* Sidebar с настройками поиска */}
-			<aside className="w-full flex-shrink-0 md:w-80">
+			<aside className="w-full shrink-0 sm:w-54">
 				<SearchSettings
 					onSearchInChange={setTempSearchFields}
 					onSortByChange={setTempSortBy}
@@ -110,7 +110,7 @@ export const ArticlesList = () => {
 							className="flex-1 rounded-md border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
 							onChange={(e) => setTempSearchQuery(e.target.value)}
 							placeholder="Введите поисковый запрос..."
-							type="text"
+							type="search"
 							value={tempSearchQuery}
 						/>
 						<button

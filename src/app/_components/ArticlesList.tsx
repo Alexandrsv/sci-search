@@ -10,7 +10,14 @@ import { SearchSettings } from "./SearchSettings";
 
 export const ArticlesList = () => {
 	// Use Zustand stores
-	const { searchQuery, searchFields, sortBy } = useSearchStore();
+	const {
+		searchQuery,
+		searchFields,
+		sortBy,
+		setSearchQuery,
+		setSearchFields,
+		setSortBy,
+	} = useSearchStore();
 	const {
 		tempSearchQuery,
 		tempSearchFields,
@@ -18,8 +25,20 @@ export const ArticlesList = () => {
 		setTempSearchQuery,
 		setTempSearchFields,
 		setTempSortBy,
-		transferToSearch,
 	} = useTempSearchStore();
+
+	const transferToSearchLocal = useCallback(() => {
+		setSearchQuery(tempSearchQuery);
+		setSearchFields(tempSearchFields);
+		setSortBy(tempSortBy);
+	}, [
+		tempSearchQuery,
+		tempSearchFields,
+		tempSortBy,
+		setSearchQuery,
+		setSearchFields,
+		setSortBy,
+	]);
 
 	const [limit] = useState(10);
 	const [offset, setOffset] = useState(0);
@@ -47,13 +66,11 @@ export const ArticlesList = () => {
 	const utils = api.useUtils();
 
 	const handleSearch = useCallback(() => {
-		if (!searchQuery.trim()) return;
-
 		setOffset(0);
 		setCurrentPage(1);
 		setHasSearched(true);
 		utils.scimag.getArticles.invalidate();
-	}, [searchQuery, utils]);
+	}, [utils]);
 
 	const handleNextPage = useCallback(() => {
 		if (!data?.hasMore) return;
@@ -92,9 +109,9 @@ export const ArticlesList = () => {
 				{/* Search Form */}
 				<form
 					className="mb-8"
-					onSubmit={async (e) => {
+					onSubmit={(e) => {
 						e.preventDefault();
-						await transferToSearch();
+						transferToSearchLocal();
 						handleSearch();
 					}}
 				>

@@ -17,3 +17,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+
+  sci-search:
+    container_name: ${APP_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      DATABASE_URL: ${DATABASE_URL_DOCKER}
+      UPLOADS_DIR: /app/uploads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-default"
+
+      - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${APP_NAME}.tls=true"
+      - "traefik.http.routers.${APP_NAME}.tls.certresolver=production"
+
+      - "traefik.http.routers.${APP_NAME}-http.entrypoints=web"
+      - "traefik.http.routers.${APP_NAME}-http.rule=Host(`${DOMAIN}`)"
+
+      - traefik.port=${APP_PORT}
+
+    depends_on:
+      - pg
+
+networks:
+  default:
+    name: traefik-default
+    external: true

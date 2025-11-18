@@ -17,7 +17,8 @@
 		"postinstall": "prisma generate",
 		"preview": "next build && next start",
 		"start": "next start",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"start:prod": "prisma migrate deploy && npm run build && next start"
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^6.19.0",

@@ -5,7 +5,7 @@ interface Article {
 	doi: string;
 	title: string;
 	author: string;
-	year: number;
+	year: string;
 	abstract?: string;
 	citation_count: number;
 	highlighted_title: string;

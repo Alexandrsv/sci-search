@@ -18,7 +18,9 @@
 		"preview": "next build && next start",
 		"start": "next start",
 		"typecheck": "tsc --noEmit",
-		"start:prod": "prisma migrate deploy && npm run build && next start"
+		"start:prod": "prisma migrate deploy && npm run build && next start",
+		"deploy": "./scripts/deploy.sh",
+		"logs": "./scripts/logs.sh"
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^6.19.0",

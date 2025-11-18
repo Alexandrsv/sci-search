@@ -1,10 +1,7 @@
 import { ArticlesList } from "@/app/_components/ArticlesList";
-import { api, HydrateClient } from "@/trpc/server";
+import { HydrateClient } from "@/trpc/server";
 
 export default async function Home() {
-	// Prefetch initial articles for better performance
-	void api.scimag.getArticles.prefetch({ limit: 10, offset: 0 });
-
 	return (
 		<HydrateClient>
 			<main className="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">

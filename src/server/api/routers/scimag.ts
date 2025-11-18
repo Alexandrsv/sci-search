@@ -20,6 +20,7 @@ export const scimagRouter = createTRPCRouter({
 				searchIn: z
 					.array(z.enum(["title", "abstract", "author"]))
 					.default(["title"]),
+				sortBy: z.enum(["citations", "newest", "oldest"]).default("citations"),
 			}),
 		)
 		.query(async ({ input }) => {
@@ -35,6 +36,7 @@ export const scimagRouter = createTRPCRouter({
 			const articles = await searchArticles({
 				query: input.search,
 				searchIn: input.searchIn,
+				sortBy: input.sortBy,
 				limit: input.limit,
 				offset: input.offset,
 			});

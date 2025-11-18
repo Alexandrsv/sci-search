@@ -10,12 +10,14 @@ import { SearchSettings } from "./SearchSettings";
 
 export const ArticlesList = () => {
 	// Use Zustand stores
-	const { searchQuery, searchFields } = useSearchStore();
+	const { searchQuery, searchFields, sortBy } = useSearchStore();
 	const {
 		tempSearchQuery,
 		tempSearchFields,
+		tempSortBy,
 		setTempSearchQuery,
 		setTempSearchFields,
+		setTempSortBy,
 		transferToSearch,
 	} = useTempSearchStore();
 
@@ -28,10 +30,11 @@ export const ArticlesList = () => {
 		() => ({
 			search: searchQuery || undefined,
 			searchIn: searchFields,
+			sortBy,
 			limit,
 			offset,
 		}),
-		[searchQuery, searchFields, limit, offset],
+		[searchQuery, searchFields, sortBy, limit, offset],
 	);
 
 	const { data, isLoading, error } = api.scimag.getArticles.useQuery(
@@ -78,7 +81,9 @@ export const ArticlesList = () => {
 			<aside className="w-full flex-shrink-0 md:w-80">
 				<SearchSettings
 					onSearchInChange={setTempSearchFields}
+					onSortByChange={setTempSortBy}
 					searchIn={tempSearchFields}
+					sortBy={tempSortBy}
 				/>
 			</aside>
 

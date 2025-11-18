@@ -11,7 +11,7 @@ export default async function Home() {
 							Sci <span className="text-cyan-400 drop-shadow-md">Search</span>
 						</h1>
 						<p className="mt-4 text-lg text-slate-300">
-							Поиск научных статей в базе данных
+							Полнотекстовый поиск по <b>81&nbsp;903&nbsp;411</b> публикациям
 						</p>
 					</header>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
 import type { SearchField, SortOption } from "@/stores/searchStore";
 
 const SEARCH_FIELD_LABELS: Record<SearchField, string> = {
@@ -27,18 +26,15 @@ export function SearchSettings({
 	sortBy,
 	onSortByChange,
 }: SearchSettingsProps) {
-	const handleFieldChange = useCallback(
-		(field: SearchField, checked: boolean) => {
-			if (checked) {
-				if (!searchIn.includes(field)) {
-					onSearchInChange([...searchIn, field]);
-				}
-			} else {
-				onSearchInChange(searchIn.filter((f) => f !== field));
+	const handleFieldChange = (field: SearchField, checked: boolean) => {
+		if (checked) {
+			if (!searchIn.includes(field)) {
+				onSearchInChange([...searchIn, field]);
 			}
-		},
-		[searchIn, onSearchInChange],
-	);
+		} else {
+			onSearchInChange(searchIn.filter((f) => f !== field));
+		}
+	};
 
 	return (
 		<div className="rounded-lg border border-slate-600/50 bg-slate-800/50 p-6">

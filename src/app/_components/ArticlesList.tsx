@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { useSearchStore } from "@/stores/searchStore";
 import { useTempSearchStore } from "@/stores/tempSearchStore";
 import { api } from "@/trpc/react";
@@ -27,34 +27,24 @@ export const ArticlesList = () => {
 		setTempSortBy,
 	} = useTempSearchStore();
 
-	const transferToSearchLocal = useCallback(() => {
+	const transferToSearchLocal = () => {
 		setSearchQuery(tempSearchQuery);
 		setSearchFields(tempSearchFields);
 		setSortBy(tempSortBy);
-	}, [
-		tempSearchQuery,
-		tempSearchFields,
-		tempSortBy,
-		setSearchQuery,
-		setSearchFields,
-		setSortBy,
-	]);
+	};
 
 	const [limit] = useState(10);
 	const [offset, setOffset] = useState(0);
 	const [hasSearched, setHasSearched] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const searchParams = useMemo(
-		() => ({
-			search: searchQuery || undefined,
-			searchIn: searchFields,
-			sortBy,
-			limit,
-			offset,
-		}),
-		[searchQuery, searchFields, sortBy, limit, offset],
-	);
+	const searchParams = {
+		search: searchQuery || undefined,
+		searchIn: searchFields,
+		sortBy,
+		limit,
+		offset,
+	};
 
 	const { data, isLoading, error } = api.scimag.getArticles.useQuery(
 		searchParams,
@@ -65,24 +55,24 @@ export const ArticlesList = () => {
 
 	const utils = api.useUtils();
 
-	const handleSearch = useCallback(() => {
+	const handleSearch = () => {
 		setOffset(0);
 		setCurrentPage(1);
 		setHasSearched(true);
 		utils.scimag.getArticles.invalidate();
-	}, [utils]);
+	};
 
-	const handleNextPage = useCallback(() => {
+	const handleNextPage = () => {
 		if (!data?.hasMore) return;
 		setOffset((prev) => prev + limit);
 		setCurrentPage((prev) => prev + 1);
-	}, [data?.hasMore, limit]);
+	};
 
-	const handlePrevPage = useCallback(() => {
+	const handlePrevPage = () => {
 		if (currentPage <= 1) return;
 		setOffset((prev) => Math.max(0, prev - limit));
 		setCurrentPage((prev) => Math.max(1, prev - 1));
-	}, [currentPage, limit]);
+	};
 
 	if (error) {
 		return (

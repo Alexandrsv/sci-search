@@ -1,3 +1,6 @@
+'use client';
+
+import DOMPurify from 'dompurify';
 import { CopyButton } from "./CopyButton";
 
 interface Article {
@@ -18,7 +21,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 			<h3 className="mb-2 font-bold text-white text-xl">
 				<span
 					dangerouslySetInnerHTML={{
-						__html: article.highlighted_title,
+						__html: DOMPurify.sanitize(article.highlighted_title),
 					}}
 				/>
 			</h3>
@@ -30,9 +33,16 @@ const ArticleCard = ({ article }: { article: Article }) => {
 				<p>
 					<span className="font-medium">Год:</span> {article.year}
 				</p>
-				<p className="flex items-center">
-					<span className="font-medium">DOI:</span>
-					<CopyButton text={article.doi}>{article.doi}</CopyButton>
+				<p className="flex w-full grid-cols-2 items-center">
+					<span className="inline-flex font-medium">DOI:</span>
+					<CopyButton
+						className="w-full truncate whitespace-nowrap"
+						text={article.doi}
+					>
+						<span className="inline-block w-min shrink truncate whitespace-nowrap">
+							{article.doi}
+						</span>
+					</CopyButton>
 				</p>
 				<p>
 					<span className="font-medium text-cyan-400">
@@ -48,7 +58,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 					<p
 						className="text-slate-200 leading-relaxed"
 						dangerouslySetInnerHTML={{
-							__html: article.highlighted_abstract || article.abstract,
+							__html: DOMPurify.sanitize(article.highlighted_abstract || article.abstract),
 						}}
 					/>
 				</div>

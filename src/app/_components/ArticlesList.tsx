@@ -105,7 +105,7 @@ export const ArticlesList = () => {
 						handleSearch();
 					}}
 				>
-					<div className="flex gap-3">
+					<div className="flex w-full flex-col gap-3 sm:flex-row">
 						<input
 							className="flex-1 rounded-md border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
 							onChange={(e) => setTempSearchQuery(e.target.value)}
@@ -114,7 +114,7 @@ export const ArticlesList = () => {
 							value={tempSearchQuery}
 						/>
 						<button
-							className="rounded-md bg-cyan-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
+							className="w-full rounded-md bg-cyan-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
 							disabled={!tempSearchQuery.trim() || isLoading}
 							type="submit"
 						>

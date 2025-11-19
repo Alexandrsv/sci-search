@@ -2,8 +2,9 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-
+import { Suspense } from "react";
 import { TRPCReactProvider } from "@/trpc/react";
+import { Metrika } from "./_components/Metrika";
 
 export const metadata: Metadata = {
 	title: "Create T3 App",
@@ -23,6 +24,9 @@ export default function RootLayout({
 		<html className={`${geist.variable}`} lang="en">
 			<body>
 				<TRPCReactProvider>{children}</TRPCReactProvider>
+				<Suspense>
+					<Metrika />
+				</Suspense>
 			</body>
 		</html>
 	);

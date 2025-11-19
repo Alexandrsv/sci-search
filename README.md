@@ -1,29 +1,66 @@
-# Create T3 App
+# Поисковый интерфейс для научных статей (sci-search)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Этот проект представляет собой веб-приложение для поиска научных статей.
 
-## What's next? How do I make an app with this?
+## Технологии
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- [Next.js](https://nextjs.org/) - Фреймворк для React-приложений с серверным рендерингом.
+- [tRPC](https://trpc.io/) - Для создания типизированных API без необходимости кодогенерации.
+- [Prisma](https://prisma.io/) - ORM для взаимодействия с базой данных.
+- [PostgreSQL](https://www.postgresql.org/) - Реляционная база данных.
+- [Tailwind CSS](https://tailwindcss.com/) - CSS-фреймворк для быстрой вёрстки.
+- [Zustand](https://zustand-demo.pmnd.rs/) - Простое и быстрое управление состоянием.
+- [Biome](https://biomejs.dev/) - Форматер и линтер для кода.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Начало работы
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### 1. Установка зависимостей
 
-## Learn More
+```bash
+npm install
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### 2. Настройка переменных окружения
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+Создайте файл `.env` в корне проекта, скопировав содержимое `.env.example`. Этот файл содержит все необходимые переменные окружения, включая настройки базы данных (PostgreSQL), данные для подключения (например, `DATABASE_URL` и `DATABASE_URL_DOCKER`), а также публичные переменные для фронтенда, такие как `NEXT_PUBLIC_YANDEX_METRIKA_ID`.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Обязательно замените значения-заполнители своими собственными, особенно для секретных данных, таких как пароли.
 
-## How do I deploy this?
+```bash
+cp .env.example .env
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Пример `.env` (для полной информации смотрите `.env.example`):
+```
+APP_NAME="sci-search"
+# ... другие переменные
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+NEXT_PUBLIC_YANDEX_METRIKA_ID="YOUR_YANDEX_METRIKA_ID"
+```
+
+### 3. Применение миграций базы данных
+
+Выполните миграции для создания необходимых таблиц в базе данных.
+
+```bash
+npm run db:generate
+```
+
+### 4. Запуск приложения
+
+Запустите сервер для разработки.
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу [http://localhost:3000](http://localhost:3000).
+
+## Доступные скрипты
+
+- `npm run dev` - Запуск сервера для разработки.
+- `npm run build` - Сборка production-версии приложения.
+- `npm run start` - Запуск production-сборки.
+- `npm run check` - Проверка кода с помощью Biome.
+- `npm run db:generate` - Применение миграций базы данных.
+- `npm run db:studio` - Запуск Prisma Studio для просмотра и редактирования данных.

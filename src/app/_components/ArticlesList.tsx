@@ -131,11 +131,9 @@ export const ArticlesList = () => {
 					<>
 						{/* Results Info */}
 						<div className="mb-6 text-slate-300">
-							{data?.articles && data.articles.length > 0 ? (
-								<p>Найдено статей: {data.total}</p>
-							) : searchQuery.trim() ? (
+							{searchQuery.trim() && data?.articles?.length === 0 && (
 								<p>Статьи не найдены</p>
-							) : null}
+							)}
 						</div>
 
 						{/* Articles List */}

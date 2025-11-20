@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 import { CopyButton } from "./CopyButton";
 
 interface Article {
@@ -58,7 +58,9 @@ const ArticleCard = ({ article }: { article: Article }) => {
 					<p
 						className="text-slate-200 leading-relaxed"
 						dangerouslySetInnerHTML={{
-							__html: DOMPurify.sanitize(article.highlighted_abstract || article.abstract),
+							__html: DOMPurify.sanitize(
+								article.highlighted_abstract || article.abstract,
+							),
 						}}
 					/>
 				</div>

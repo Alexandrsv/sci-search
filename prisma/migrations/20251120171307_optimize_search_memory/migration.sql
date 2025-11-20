@@ -1,0 +1,1 @@
+ALTER DATABASE "sci-search" SET work_mem = '256MB';

@@ -37,26 +37,26 @@ export function SearchSettings({
 	};
 
 	return (
-		<div className="rounded-lg border border-slate-600/50 bg-slate-800/50 p-6">
-			<h3 className="mb-6 font-semibold text-lg text-white">
+		<div className="rounded-lg border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-sm">
+			<h3 className="mb-6 font-semibold text-lg text-slate-900">
 				Настройки поиска
 			</h3>
 
 			<div className="space-y-4">
 				{/* Sort By Section */}
 				<div>
-					<h4 className="mb-3 font-semibold text-white">Сортировка</h4>
-					<label className="text-gray-400" htmlFor="order-select">
+					<h4 className="mb-3 font-semibold text-slate-900">Сортировка</h4>
+					<label className="text-slate-500" htmlFor="order-select">
 						сначала:
 					</label>
 					<select
-						className="w-full rounded-md border border-slate-600/50 bg-slate-800 px-3 py-2 text-white focus:border-cyan-400 focus:outline-none"
+						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none shadow-sm"
 						id={"order-select"}
 						onChange={(e) => onSortByChange(e.target.value as SortOption)}
 						value={sortBy}
 					>
 						{(Object.keys(SORT_OPTION_LABELS) as SortOption[]).map((option) => (
-							<option className="bg-slate-800" key={option} value={option}>
+							<option className="bg-white" key={option} value={option}>
 								{SORT_OPTION_LABELS[option]}
 							</option>
 						))}
@@ -65,17 +65,17 @@ export function SearchSettings({
 
 				{/* Search Fields Section */}
 				<div>
-					<h4 className="mb-3 font-semibold text-white">Поля поиска</h4>
+					<h4 className="mb-3 font-semibold text-slate-900">Поля поиска</h4>
 					<div className="space-y-2">
 						{(Object.keys(SEARCH_FIELD_LABELS) as SearchField[]).map(
 							(field) => (
 								<label
-									className="flex cursor-pointer items-center text-white/80 transition-colors hover:text-white"
+									className="flex cursor-pointer items-center text-slate-700 transition-colors hover:text-slate-900"
 									key={field}
 								>
 									<input
 										checked={searchIn.includes(field)}
-										className="mr-3 h-4 w-4 rounded border-slate-600 bg-slate-700 text-cyan-600 focus:ring-2 focus:ring-cyan-500"
+										className="mr-3 h-4 w-4 rounded border-slate-300 bg-white text-blue-600 focus:ring-2 focus:ring-blue-500"
 										onChange={(e) => handleFieldChange(field, e.target.checked)}
 										type="checkbox"
 									/>
@@ -88,7 +88,7 @@ export function SearchSettings({
 			</div>
 
 			{searchIn.length === 0 && (
-				<p className="mt-4 text-sm text-yellow-400">
+				<p className="mt-4 text-sm text-yellow-600">
 					Выберите хотя бы одно поле для поиска
 				</p>
 			)}

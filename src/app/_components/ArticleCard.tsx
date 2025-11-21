@@ -17,8 +17,8 @@ interface Article {
 
 const ArticleCard = ({ article }: { article: Article }) => {
 	return (
-		<div className="rounded-lg border border-slate-600/50 bg-slate-800/50 p-6 shadow-lg transition-all duration-300 hover:bg-slate-700/70 hover:shadow-xl">
-			<h3 className="mb-2 font-bold text-white text-xl">
+		<div className="rounded-lg border border-slate-200 bg-white/80 p-6 shadow-sm transition-all duration-300 hover:bg-white hover:shadow-md backdrop-blur-sm">
+			<h3 className="mb-2 font-bold text-slate-900 text-xl">
 				<span
 					dangerouslySetInnerHTML={{
 						__html: DOMPurify.sanitize(article.highlighted_title),
@@ -26,7 +26,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 				/>
 			</h3>
 
-			<div className="space-y-2 text-slate-300 text-sm">
+			<div className="space-y-2 text-slate-600 text-sm">
 				<p>
 					<span className="font-medium">Автор:</span> {article.author}
 				</p>
@@ -45,7 +45,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 					</CopyButton>
 				</p>
 				<p>
-					<span className="font-medium text-cyan-400">
+					<span className="font-medium text-blue-600">
 						Вероятная цитируемость:
 					</span>{" "}
 					{article.citation_count}
@@ -54,9 +54,9 @@ const ArticleCard = ({ article }: { article: Article }) => {
 
 			{article.abstract && (
 				<div className="mt-4">
-					<h4 className="mb-2 font-medium text-white">Аннотация:</h4>
+					<h4 className="mb-2 font-medium text-slate-900">Аннотация:</h4>
 					<p
-						className="text-slate-200 leading-relaxed"
+						className="text-slate-700 leading-relaxed"
 						dangerouslySetInnerHTML={{
 							__html: DOMPurify.sanitize(
 								article.highlighted_abstract || article.abstract,

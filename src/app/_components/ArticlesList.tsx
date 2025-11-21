@@ -107,14 +107,14 @@ export const ArticlesList = () => {
 				>
 					<div className="flex w-full flex-col gap-3 sm:flex-row">
 						<input
-							className="flex-1 rounded-md border border-slate-600/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 transition-colors focus:border-cyan-400 focus:outline-none"
+							className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 transition-colors focus:border-blue-500 focus:outline-none shadow-sm"
 							onChange={(e) => setTempSearchQuery(e.target.value)}
 							placeholder="Введите поисковый запрос..."
 							type="search"
 							value={tempSearchQuery}
 						/>
 						<button
-							className="w-full rounded-md bg-cyan-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+							className="w-full rounded-md bg-blue-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto shadow-sm"
 							disabled={!tempSearchQuery.trim() || isLoading}
 							type="submit"
 						>
@@ -130,7 +130,7 @@ export const ArticlesList = () => {
 				{!isLoading && hasSearched && (
 					<>
 						{/* Results Info */}
-						<div className="mb-6 text-slate-300">
+						<div className="mb-6 text-slate-600">
 							{searchQuery.trim() && data?.articles?.length === 0 && (
 								<p>Статьи не найдены</p>
 							)}
@@ -146,7 +146,7 @@ export const ArticlesList = () => {
 						{/* Pagination */}
 						<div className="mt-8 flex items-center justify-center gap-4">
 							<button
-								className="rounded-md border border-slate-600/50 bg-slate-700/70 px-4 py-2 font-semibold text-white transition-colors hover:bg-slate-600/70 disabled:cursor-not-allowed disabled:opacity-50"
+								className="rounded-md border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
 								disabled={currentPage <= 1}
 								onClick={handlePrevPage}
 								type="button"
@@ -154,10 +154,10 @@ export const ArticlesList = () => {
 								Назад
 							</button>
 
-							<span className="text-slate-300">Страница {currentPage}</span>
+							<span className="text-slate-600">Страница {currentPage}</span>
 
 							<button
-								className="rounded-md border border-slate-600/50 bg-slate-700/70 px-4 py-2 font-semibold text-white transition-colors hover:bg-slate-600/70 disabled:cursor-not-allowed disabled:opacity-50"
+								className="rounded-md border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
 								disabled={!data?.hasMore}
 								onClick={handleNextPage}
 								type="button"
@@ -171,7 +171,7 @@ export const ArticlesList = () => {
 				{/* Initial State */}
 				{!hasSearched && (
 					<div className="py-16 text-center">
-						<p className="text-lg text-slate-400">
+						<p className="text-lg text-slate-500">
 							Введите запрос для поиска научных статей
 						</p>
 					</div>

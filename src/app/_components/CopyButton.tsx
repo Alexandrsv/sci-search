@@ -23,7 +23,7 @@ const CopyButton: FC<CopyButtonProps> = ({ text, children, className }) => {
 	return (
 		<button
 			className={
-				"flex cursor-pointer items-center gap-2 text-slate-300 transition-colors hover:text-white" +
+				"flex cursor-pointer items-center gap-2 text-slate-600 transition-colors hover:text-white" +
 				className
 			}
 			onClick={copyToClipboard}

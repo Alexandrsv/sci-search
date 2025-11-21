@@ -76,7 +76,7 @@ export const ArticlesList = () => {
 
 	if (error) {
 		return (
-			<div className="py-8 text-center text-red-400">
+			<div className="py-8 text-center text-blue-400">
 				Ошибка загрузки статей: {error.message}
 			</div>
 		);
@@ -107,14 +107,14 @@ export const ArticlesList = () => {
 				>
 					<div className="flex w-full flex-col gap-3 sm:flex-row">
 						<input
-							className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 transition-colors focus:border-blue-500 focus:outline-none shadow-sm"
+							className="flex-1 rounded-md border border-blue-500 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 shadow-blue-200/50 shadow-lg transition-colors focus:border-blue-500 focus:outline-none"
 							onChange={(e) => setTempSearchQuery(e.target.value)}
 							placeholder="Введите поисковый запрос..."
 							type="search"
 							value={tempSearchQuery}
 						/>
 						<button
-							className="w-full rounded-md bg-blue-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto shadow-sm"
+							className="w-full rounded-md bg-blue-500 px-6 py-3 font-semibold text-white shadow-blue-500/50 shadow-lg transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
 							disabled={!tempSearchQuery.trim() || isLoading}
 							type="submit"
 						>
@@ -146,7 +146,7 @@ export const ArticlesList = () => {
 						{/* Pagination */}
 						<div className="mt-8 flex items-center justify-center gap-4">
 							<button
-								className="rounded-md border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
+								className="rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
 								disabled={currentPage <= 1}
 								onClick={handlePrevPage}
 								type="button"
@@ -157,7 +157,7 @@ export const ArticlesList = () => {
 							<span className="text-slate-600">Страница {currentPage}</span>
 
 							<button
-								className="rounded-md border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
+								className="rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
 								disabled={!data?.hasMore}
 								onClick={handleNextPage}
 								type="button"

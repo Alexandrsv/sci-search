@@ -17,7 +17,7 @@ interface Article {
 
 const ArticleCard = ({ article }: { article: Article }) => {
 	return (
-		<div className="rounded-lg border border-slate-200 bg-white/80 p-6 shadow-sm transition-all duration-300 hover:bg-white hover:shadow-md backdrop-blur-sm">
+		<div className="rounded-lg border border-blue-500 bg-white/80 p-6 shadow-blue-200/50 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-blue-400 hover:bg-white hover:shadow-lg">
 			<h3 className="mb-2 font-bold text-slate-900 text-xl">
 				<span
 					dangerouslySetInnerHTML={{

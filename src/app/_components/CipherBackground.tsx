@@ -30,7 +30,7 @@ export function CipherBackground() {
 			canvas.height = window.innerHeight;
 			cols = Math.ceil(canvas.width / columnWidth);
 			rows = Math.ceil(canvas.height / rowHeight);
-			
+
 			// Инициализация сетки
 			grid = [];
 			for (let i = 0; i < rows; i++) {
@@ -41,7 +41,7 @@ export function CipherBackground() {
 				grid.push(row);
 			}
 		};
-		
+
 		resizeCanvas();
 		window.addEventListener("resize", resizeCanvas);
 
@@ -58,7 +58,7 @@ export function CipherBackground() {
 			ctx.textBaseline = "top";
 
 			// Обновление символов с дебаунсом (каждые 100мс)
-			const shouldUpdateChars = timestamp - lastUpdate > 100;
+			const shouldUpdateChars = timestamp - lastUpdate > 200;
 			if (shouldUpdateChars) {
 				lastUpdate = timestamp;
 			}
@@ -75,30 +75,31 @@ export function CipherBackground() {
 
 					// Радиус эффекта
 					const maxDistance = 1000; // Увеличено в 2 раза
-					
+
 					if (distance < maxDistance) {
 						// Внутри радиуса
 						const influence = 1 - distance / maxDistance;
-						
+
 						// Обновляем символ только если он близко к курсору и прошло время
 						if (shouldUpdateChars && Math.random() < 0.1 * influence) {
 							const currentRow = grid[row];
 							if (currentRow && currentRow[col] !== undefined) {
-								currentRow[col] = chars[Math.floor(Math.random() * chars.length)] || " ";
+								currentRow[col] =
+									chars[Math.floor(Math.random() * chars.length)] || " ";
 							}
 						}
 
 						// Цвет: от серого к синему ближе к центру
 						const alpha = influence; // Прозрачность зависит от близости
-						
+
 						if (influence > 0.5) {
 							// Более прозрачный синий (0.5 вместо 1.0)
-							ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.3})`; 
+							ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.3})`;
 						} else {
 							// Более прозрачный серый (0.3 вместо 0.8)
-							ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.3})`; 
+							ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.3})`;
 						}
-						
+
 						const currentRow = grid[row];
 						if (currentRow && currentRow[col] !== undefined) {
 							ctx.fillText(currentRow[col] || " ", x, y);
@@ -121,8 +122,8 @@ export function CipherBackground() {
 
 	return (
 		<canvas
-			ref={canvasRef}
 			className="fixed inset-0 z-[-1]"
+			ref={canvasRef}
 			style={{ pointerEvents: "none" }}
 		/>
 	);

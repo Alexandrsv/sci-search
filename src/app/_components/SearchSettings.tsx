@@ -37,7 +37,7 @@ export function SearchSettings({
 	};
 
 	return (
-		<div className="rounded-lg border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-sm">
+		<div className="rounded-lg border border-blue-500 bg-white/80 p-6 shadow-blue-200/50 shadow-lg backdrop-blur-sm">
 			<h3 className="mb-6 font-semibold text-lg text-slate-900">
 				Настройки поиска
 			</h3>
@@ -50,7 +50,7 @@ export function SearchSettings({
 						сначала:
 					</label>
 					<select
-						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none shadow-sm"
+						className="w-full rounded-md border border-blue-500 bg-white px-3 py-2 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none"
 						id={"order-select"}
 						onChange={(e) => onSortByChange(e.target.value as SortOption)}
 						value={sortBy}
@@ -75,7 +75,7 @@ export function SearchSettings({
 								>
 									<input
 										checked={searchIn.includes(field)}
-										className="mr-3 h-4 w-4 rounded border-slate-300 bg-white text-blue-600 focus:ring-2 focus:ring-blue-500"
+										className="mr-3 h-4 w-4 rounded border-blue-500 bg-white text-blue-600 focus:ring-2 focus:ring-blue-500"
 										onChange={(e) => handleFieldChange(field, e.target.checked)}
 										type="checkbox"
 									/>
@@ -88,7 +88,7 @@ export function SearchSettings({
 			</div>
 
 			{searchIn.length === 0 && (
-				<p className="mt-4 text-sm text-yellow-600">
+				<p className="mt-4 text-blue-600 text-sm">
 					Выберите хотя бы одно поле для поиска
 				</p>
 			)}

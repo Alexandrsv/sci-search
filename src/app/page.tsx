@@ -1,4 +1,4 @@
-import { siGithub } from "simple-icons";
+import { SiGithub, SiReact } from "@icons-pack/react-simple-icons";
 import { ArticlesList } from "@/app/_components/ArticlesList";
 import { HydrateClient } from "@/trpc/server";
 
@@ -13,15 +13,7 @@ export default async function Home() {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<svg
-							role="img"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-							className="inline-block h-6 w-6 fill-current"
-						>
-							<title>{siGithub.title}</title>
-							<path d={siGithub.path} />
-						</svg>
+						<SiGithub className="text-cyan-400" size={24} />
 					</a>
 				</div>
 				<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">

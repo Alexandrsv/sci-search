@@ -13,10 +13,15 @@ export default async function Home() {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<span
+						<svg
+							role="img"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
 							className="inline-block h-6 w-6 fill-current"
-							dangerouslySetInnerHTML={{ __html: siGithub.svg }}
-						/>
+						>
+							<title>{siGithub.title}</title>
+							<path d={siGithub.path} />
+						</svg>
 					</a>
 				</div>
 				<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">

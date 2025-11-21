@@ -37,12 +37,12 @@ services:
       - "traefik.docker.network=traefik-default"
 
       - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${APP_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${APP_NAME}.rule=${DOMAIN_RULE}"
       - "traefik.http.routers.${APP_NAME}.tls=true"
       - "traefik.http.routers.${APP_NAME}.tls.certresolver=production"
 
       - "traefik.http.routers.${APP_NAME}-http.entrypoints=web"
-      - "traefik.http.routers.${APP_NAME}-http.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${APP_NAME}-http.rule=${DOMAIN_RULE}"
 
       - traefik.port=${APP_PORT}
 

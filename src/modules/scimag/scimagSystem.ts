@@ -10,7 +10,6 @@ const getOrderBy = (sortBy: SortOption) => {
 			return Prisma.sql`year DESC NULLS LAST, month DESC NULLS LAST, day DESC NULLS LAST`;
 		case "oldest":
 			return Prisma.sql`year ASC NULLS LAST, month ASC NULLS LAST, day ASC NULLS LAST`;
-		case "citations":
 		default:
 			return Prisma.sql`citation_count DESC NULLS LAST, year DESC NULLS LAST, month DESC NULLS LAST, day DESC NULLS LAST`;
 	}

@@ -1,0 +1,39 @@
+{
+	"HomePage": {
+		"title": "Sci Search",
+		"subtitle": "Полнотекстовый поиск по <b>81 903 411</b> публикациям",
+		"searchPlaceholder": "Введите поисковый запрос...",
+		"searchButton": "Поиск",
+		"searching": "Поиск...",
+		"noResults": "Статьи не найдены",
+		"initialState": "Введите запрос для поиска научных статей",
+		"prevPage": "Назад",
+		"nextPage": "Вперед",
+		"page": "Страница"
+	},
+	"ArticleCard": {
+		"author": "Автор:",
+		"year": "Год:",
+		"doi": "DOI:",
+		"citationCount": "Вероятная цитируемость:",
+		"abstract": "Аннотация:"
+	},
+	"SearchSettings": {
+		"title": "Настройки поиска",
+		"searchIn": "Искать в:",
+		"sortBy": "Сортировка:",
+		"fields": {
+			"title": "Названии",
+			"abstract": "Аннотации"
+		},
+		"sortOptions": {
+			"citations": "Цитируемости",
+			"newest": "Новые",
+			"oldest": "Старые"
+		}
+	},
+	"Metadata": {
+		"title": "Sci Search - поиск научных публикаций",
+		"description": "Полнотекстовый поиск по названиям и аннотациям научных публикаций. Возможность сортировки по цитируемости"
+	}
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useSearchStore } from "@/stores/searchStore";
 import { useTempSearchStore } from "@/stores/tempSearchStore";
@@ -9,6 +10,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import { SearchSettings } from "./SearchSettings";
 
 export const ArticlesList = () => {
+	const t = useTranslations("HomePage");
 	// Use Zustand stores
 	const {
 		searchQuery,
@@ -85,7 +87,7 @@ export const ArticlesList = () => {
 	return (
 		<div className="flex w-full max-w-7xl flex-wrap gap-8">
 			{/* Sidebar с настройками поиска */}
-			<aside className="w-full shrink-0 sm:w-54">
+			<aside className="w-full shrink-0 sm:w-56">
 				<SearchSettings
 					onSearchInChange={setTempSearchFields}
 					onSortByChange={setTempSortBy}
@@ -109,7 +111,7 @@ export const ArticlesList = () => {
 						<input
 							className="flex-1 rounded-md border border-blue-500 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 shadow-blue-200/50 shadow-lg transition-colors focus:border-blue-500 focus:outline-none"
 							onChange={(e) => setTempSearchQuery(e.target.value)}
-							placeholder="Введите поисковый запрос..."
+							placeholder={t("searchPlaceholder")}
 							type="search"
 							value={tempSearchQuery}
 						/>
@@ -118,13 +120,13 @@ export const ArticlesList = () => {
 							disabled={!tempSearchQuery.trim() || isLoading}
 							type="submit"
 						>
-							{isLoading ? "Поиск..." : "Поиск"}
+							{isLoading ? t("searching") : t("searchButton")}
 						</button>
 					</div>
 				</form>
 
 				{/* Loading State */}
-				{isLoading && <LoadingSpinner message="Загрузка статей..." />}
+				{isLoading && <LoadingSpinner message={t("searching")} />}
 
 				{/* Results */}
 				{!isLoading && hasSearched && (
@@ -132,7 +134,7 @@ export const ArticlesList = () => {
 						{/* Results Info */}
 						<div className="mb-6 text-slate-600">
 							{searchQuery.trim() && data?.articles?.length === 0 && (
-								<p>Статьи не найдены</p>
+								<p>{t("noResults")}</p>
 							)}
 						</div>
 
@@ -151,10 +153,12 @@ export const ArticlesList = () => {
 								onClick={handlePrevPage}
 								type="button"
 							>
-								Назад
+								{t("prevPage")}
 							</button>
 
-							<span className="text-slate-600">Страница {currentPage}</span>
+							<span className="text-slate-600">
+								{t("page")} {currentPage}
+							</span>
 
 							<button
 								className="rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
@@ -162,7 +166,7 @@ export const ArticlesList = () => {
 								onClick={handleNextPage}
 								type="button"
 							>
-								Вперед
+								{t("nextPage")}
 							</button>
 						</div>
 					</>
@@ -171,9 +175,7 @@ export const ArticlesList = () => {
 				{/* Initial State */}
 				{!hasSearched && (
 					<div className="py-16 text-center">
-						<p className="text-lg text-slate-500">
-							Введите запрос для поиска научных статей
-						</p>
+						<p className="text-lg text-slate-500">{t("initialState")}</p>
 					</div>
 				)}
 			</div>

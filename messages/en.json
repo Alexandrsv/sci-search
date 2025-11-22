@@ -1,0 +1,39 @@
+{
+	"HomePage": {
+		"title": "Sci Search",
+		"subtitle": "Full-text search across <b>81 903 411</b> publications",
+		"searchPlaceholder": "Enter search query...",
+		"searchButton": "Search",
+		"searching": "Searching...",
+		"noResults": "No articles found",
+		"initialState": "Enter a query to search for scientific articles",
+		"prevPage": "Back",
+		"nextPage": "Forward",
+		"page": "Page"
+	},
+	"ArticleCard": {
+		"author": "Author:",
+		"year": "Year:",
+		"doi": "DOI:",
+		"citationCount": "Probable citations:",
+		"abstract": "Abstract:"
+	},
+	"SearchSettings": {
+		"title": "Search Settings",
+		"searchIn": "Search in:",
+		"sortBy": "Sort by:",
+		"fields": {
+			"title": "Title",
+			"abstract": "Abstract"
+		},
+		"sortOptions": {
+			"citations": "Citations",
+			"newest": "Newest",
+			"oldest": "Oldest"
+		}
+	},
+	"Metadata": {
+		"title": "Sci Search - Scientific Publication Search",
+		"description": "Full-text search by titles and abstracts of scientific publications. Ability to sort by citations."
+	}
+}

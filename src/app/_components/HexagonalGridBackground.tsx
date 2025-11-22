@@ -81,7 +81,7 @@ export function HexagonalGridBackground() {
 					// Эффект курсора: ослабление сетки (ластик)
 					const maxDistance = 1200; // Увеличено в 4 раза
 					const influence = Math.max(0, 1 - distance / maxDistance);
-					
+
 					// Итоговая прозрачность: плавное ослабление, но не до конца (остается 30%)
 					const finalOpacity = baseOpacity * (1 - influence * 0.7);
 
@@ -106,8 +106,8 @@ export function HexagonalGridBackground() {
 
 	return (
 		<canvas
-			ref={canvasRef}
 			className="fixed inset-0 z-[-2]"
+			ref={canvasRef}
 			style={{ pointerEvents: "none" }}
 		/>
 	);

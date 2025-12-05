@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Suspense } from "react";
 import { TRPCReactProvider } from "@/trpc/react";
+import { AuthGate } from "../_components/AuthGate";
 import { CipherBackground } from "../_components/CipherBackground";
 import { HexagonalGridBackground } from "../_components/HexagonalGridBackground";
 import { Metrika } from "../_components/Metrika";
@@ -56,7 +57,9 @@ export default async function RootLayout({
 				<NextIntlClientProvider messages={messages}>
 					<HexagonalGridBackground />
 					<CipherBackground />
-					<TRPCReactProvider>{children}</TRPCReactProvider>
+					<TRPCReactProvider>
+						<AuthGate>{children}</AuthGate>
+					</TRPCReactProvider>
 					<Suspense>
 						<Metrika />
 					</Suspense>

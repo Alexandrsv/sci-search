@@ -32,6 +32,14 @@
 			"oldest": "Oldest"
 		}
 	},
+	"AuthGate": {
+		"title": "Continue your research",
+		"description": "Authorization helps us protect the service from bots and build a community of researchers. Access requires subscribing to our channel. <b>It is free</b> and takes less than a minute.",
+		"button": "Fast login via Telegram"
+	},
+	"AuthCallback": {
+		"loading": "Authenticating..."
+	},
 	"Metadata": {
 		"title": "Sci Search - Scientific Publication Search",
 		"description": "Full-text search by titles and abstracts of scientific publications. Ability to sort by citations."

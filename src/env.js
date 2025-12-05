@@ -11,6 +11,7 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
+		AUTH_SECRET: z.string(),
 	},
 
 	/**
@@ -20,6 +21,7 @@ export const env = createEnv({
 	 */
 	client: {
 		NEXT_PUBLIC_YANDEX_METRIKA_ID: z.string(),
+		NEXT_PUBLIC_TG_BOT_GATE_URL: z.string().url(),
 
 		// NEXT_PUBLIC_CLIENTVAR: z.string(),
 	},
@@ -30,8 +32,10 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		NEXT_PUBLIC_YANDEX_METRIKA_ID: process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID,
+		NEXT_PUBLIC_TG_BOT_GATE_URL: process.env.NEXT_PUBLIC_TG_BOT_GATE_URL,
 		DATABASE_URL: process.env.DATABASE_URL,
 		NODE_ENV: process.env.NODE_ENV,
+		AUTH_SECRET: process.env.AUTH_SECRET,
 		// NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 	},
 	/**

@@ -1,8 +1,9 @@
 "use client";
 
 import { SiTelegram } from "@icons-pack/react-simple-icons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { env } from "@/env";
 
 const BOT_USER_AGENTS = [
 	"googlebot",
@@ -48,6 +49,12 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 	const [shouldShow, setShouldShow] = useState(false);
 	const [timeAsserted, setTimeAsserted] = useState(false);
 	const t = useTranslations("AuthGate");
+	const locale = useLocale();
+
+	const botUrl =
+		locale === "ru"
+			? env.NEXT_PUBLIC_TG_BOT_GATE_URL_RU
+			: env.NEXT_PUBLIC_TG_BOT_GATE_URL;
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -133,7 +140,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 					</p>
 					<a
 						className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-base text-white transition-colors duration-200 hover:bg-blue-700"
-						href={process.env.NEXT_PUBLIC_TG_BOT_GATE_URL || "#"}
+						href={botUrl || "#"}
 					>
 						<SiTelegram />
 						{t("button")}

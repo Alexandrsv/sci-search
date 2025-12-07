@@ -45,7 +45,6 @@ const BOT_USER_AGENTS = [
 ];
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
-	const LOGIN_TIMEOUT = 20000;
 	const [shouldShow, setShouldShow] = useState(false);
 	const [timeAsserted, setTimeAsserted] = useState(false);
 	const t = useTranslations("AuthGate");
@@ -59,7 +58,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setTimeAsserted(true);
-		}, LOGIN_TIMEOUT);
+		}, env.NEXT_PUBLIC_LOGIN_TIMEOUT);
 
 		return () => clearTimeout(timer);
 	}, []);

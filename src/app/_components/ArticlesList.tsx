@@ -1,79 +1,73 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { useSearchStore } from "@/stores/searchStore";
-import { useTempSearchStore } from "@/stores/tempSearchStore";
+import type { FC, FormEvent } from "react";
+import { useEffect, useState } from "react";
+import {
+	getArticlesSearchInput,
+	type SearchState,
+	serializeSearchState,
+} from "@/lib/searchParams";
 import { api } from "@/trpc/react";
 import { type Article, ArticleCard } from "./ArticleCard";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { SearchSettings } from "./SearchSettings";
 
-export const ArticlesList = () => {
+interface ArticlesListProps {
+	initialState: SearchState;
+}
+
+const createSearchHref = (pathname: string, state: SearchState) => {
+	const query = serializeSearchState(state);
+
+	return query ? `${pathname}?${query}` : pathname;
+};
+
+export const ArticlesList: FC<ArticlesListProps> = ({ initialState }) => {
 	const t = useTranslations("HomePage");
-	// Use Zustand stores
-	const {
-		searchQuery,
-		searchFields,
-		sortBy,
-		setSearchQuery,
-		setSearchFields,
-		setSortBy,
-	} = useSearchStore();
-	const {
-		tempSearchQuery,
-		tempSearchFields,
-		tempSortBy,
-		setTempSearchQuery,
-		setTempSearchFields,
-		setTempSortBy,
-	} = useTempSearchStore();
+	const pathname = usePathname();
+	const router = useRouter();
+	const [draft, setDraft] = useState<SearchState>(initialState);
+	const activeSearch = initialState.search;
+	const activeSearchInKey = initialState.searchIn.join(",");
+	const activeSort = initialState.sortBy;
 
-	const transferToSearchLocal = () => {
-		setSearchQuery(tempSearchQuery);
-		setSearchFields(tempSearchFields);
-		setSortBy(tempSortBy);
-	};
+	useEffect(() => {
+		setDraft((current) => {
+			if (
+				current.search === activeSearch &&
+				current.sortBy === activeSort &&
+				current.searchIn.join(",") === activeSearchInKey
+			) {
+				return current;
+			}
 
-	const [limit] = useState(10);
-	const [offset, setOffset] = useState(0);
-	const [hasSearched, setHasSearched] = useState(false);
-	const [currentPage, setCurrentPage] = useState(1);
+			return {
+				...current,
+				search: activeSearch,
+				searchIn: activeSearchInKey.split(",") as SearchState["searchIn"],
+				sortBy: activeSort,
+			};
+		});
+	}, [activeSearch, activeSearchInKey, activeSort]);
 
-	const searchParams = {
-		search: searchQuery || undefined,
-		searchIn: searchFields,
-		sortBy,
-		limit,
-		offset,
-	};
+	const hasSearched = Boolean(initialState.search.trim());
+	const searchParams = getArticlesSearchInput(initialState);
 
 	const { data, isLoading, error } = api.scimag.getArticles.useQuery(
 		searchParams,
-		{
-			enabled: hasSearched && !!searchQuery.trim(),
-		},
+		{ enabled: hasSearched },
 	);
 
-	const utils = api.useUtils();
-
-	const handleSearch = () => {
-		setOffset(0);
-		setCurrentPage(1);
-		setHasSearched(true);
-		utils.scimag.getArticles.invalidate();
+	const navigateToSearch = (state: SearchState) => {
+		router.push(createSearchHref(pathname, state));
 	};
 
-	const handleNextPage = () => {
-		if (!data?.hasMore) return;
-		setOffset((prev) => prev + limit);
-		setCurrentPage((prev) => prev + 1);
-	};
-
-	const handlePrevPage = () => {
-		if (currentPage <= 1) return;
-		setOffset((prev) => Math.max(0, prev - limit));
-		setCurrentPage((prev) => Math.max(1, prev - 1));
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		navigateToSearch({ ...draft, page: 1 });
 	};
 
 	if (error) {
@@ -84,40 +78,44 @@ export const ArticlesList = () => {
 		);
 	}
 
+	const previousState = { ...initialState, page: initialState.page - 1 };
+	const nextState = { ...initialState, page: initialState.page + 1 };
+	const hasPreviousPage = initialState.page > 1;
+	const hasNextPage = Boolean(data?.hasMore);
+
 	return (
 		<div className="flex w-full max-w-7xl flex-wrap gap-8">
-			{/* Sidebar с настройками поиска */}
 			<aside className="w-full shrink-0 sm:w-56">
 				<SearchSettings
-					onSearchInChange={setTempSearchFields}
-					onSortByChange={setTempSortBy}
-					searchIn={tempSearchFields}
-					sortBy={tempSortBy}
+					onSearchInChange={(searchIn) =>
+						setDraft((current) => ({ ...current, searchIn }))
+					}
+					onSortByChange={(sortBy) =>
+						setDraft((current) => ({ ...current, sortBy }))
+					}
+					searchIn={draft.searchIn}
+					sortBy={draft.sortBy}
 				/>
 			</aside>
 
-			{/* Основной контент */}
 			<div className="w-full min-w-0 flex-1 md:min-w-0 md:flex-1">
-				{/* Search Form */}
-				<form
-					className="mb-8"
-					onSubmit={(e) => {
-						e.preventDefault();
-						transferToSearchLocal();
-						handleSearch();
-					}}
-				>
+				<form className="mb-8" onSubmit={handleSubmit}>
 					<div className="flex w-full flex-col gap-3 sm:flex-row">
 						<input
 							className="flex-1 rounded-md border border-blue-500 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 shadow-blue-200/50 shadow-lg transition-colors focus:border-blue-500 focus:outline-none"
-							onChange={(e) => setTempSearchQuery(e.target.value)}
+							onChange={(event) =>
+								setDraft((current) => ({
+									...current,
+									search: event.target.value,
+								}))
+							}
 							placeholder={t("searchPlaceholder")}
 							type="search"
-							value={tempSearchQuery}
+							value={draft.search}
 						/>
 						<button
 							className="w-full rounded-md bg-blue-500 px-6 py-3 font-semibold text-white shadow-blue-500/50 shadow-lg transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-							disabled={!tempSearchQuery.trim() || isLoading}
+							disabled={!draft.search.trim() || isLoading}
 							type="submit"
 						>
 							{isLoading ? t("searching") : t("searchButton")}
@@ -125,54 +123,44 @@ export const ArticlesList = () => {
 					</div>
 				</form>
 
-				{/* Loading State */}
 				{isLoading && <LoadingSpinner message={t("searching")} />}
 
-				{/* Results */}
 				{!isLoading && hasSearched && (
 					<>
-						{/* Results Info */}
 						<div className="mb-6 text-slate-600">
-							{searchQuery.trim() && data?.articles?.length === 0 && (
-								<p>{t("noResults")}</p>
-							)}
+							{data?.articles?.length === 0 && <p>{t("noResults")}</p>}
 						</div>
 
-						{/* Articles List */}
 						<div className="space-y-6">
 							{data?.articles.map((article: Article) => (
 								<ArticleCard article={article} key={article.id} />
 							))}
 						</div>
 
-						{/* Pagination */}
 						<div className="mt-8 flex items-center justify-center gap-4">
-							<button
-								className="rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-								disabled={currentPage <= 1}
-								onClick={handlePrevPage}
-								type="button"
+							<Link
+								aria-disabled={!hasPreviousPage}
+								className={`rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 ${!hasPreviousPage ? "pointer-events-none opacity-50" : ""}`}
+								href={createSearchHref(pathname, previousState)}
 							>
 								{t("prevPage")}
-							</button>
+							</Link>
 
 							<span className="text-slate-600">
-								{t("page")} {currentPage}
+								{t("page")} {initialState.page}
 							</span>
 
-							<button
-								className="rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-								disabled={!data?.hasMore}
-								onClick={handleNextPage}
-								type="button"
+							<Link
+								aria-disabled={!hasNextPage}
+								className={`rounded-md border border-blue-500 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-blue-50 ${!hasNextPage ? "pointer-events-none opacity-50" : ""}`}
+								href={createSearchHref(pathname, nextState)}
 							>
 								{t("nextPage")}
-							</button>
+							</Link>
 						</div>
 					</>
 				)}
 
-				{/* Initial State */}
 				{!hasSearched && (
 					<div className="py-16 text-center">
 						<p className="text-lg text-slate-500">{t("initialState")}</p>

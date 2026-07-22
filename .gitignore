@@ -25,6 +25,9 @@ next-env.d.ts
 .DS_Store
 *.pem
 
+# local tooling state
+/.opencode/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

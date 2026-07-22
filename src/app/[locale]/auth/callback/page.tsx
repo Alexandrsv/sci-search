@@ -1,21 +1,22 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useEffect } from "react";
 
 function AuthCallbackContent() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
+	const locale = useLocale();
 	const t = useTranslations("AuthCallback");
 
 	useEffect(() => {
 		const token = searchParams.get("token");
 		if (token) {
 			localStorage.setItem("token", token);
-			router.push("/"); // Redirect to home
+			router.replace(`/${locale}`);
 		}
-	}, [searchParams, router]);
+	}, [locale, searchParams, router]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-black text-white">

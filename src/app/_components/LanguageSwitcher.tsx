@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useTransition } from "react";
 
@@ -8,6 +8,7 @@ export const LanguageSwitcher = () => {
 	const locale = useLocale();
 	const router = useRouter();
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();
 
 	const toggleLanguage = () => {
@@ -16,7 +17,8 @@ export const LanguageSwitcher = () => {
 			// Replace the locale segment in the pathname
 			// Assuming the pathname starts with /ru or /en
 			const newPathname = pathname.replace(`/${locale}`, `/${nextLocale}`);
-			router.replace(newPathname);
+			const query = searchParams.toString();
+			router.replace(query ? `${newPathname}?${query}` : newPathname);
 		});
 	};
 

@@ -1,6 +1,6 @@
 "use client";
 
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { CopyButton } from "./CopyButton";
@@ -29,7 +29,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 			/>
 			<h3 className="pointer-events-none relative z-10 mb-2 font-bold text-slate-900 text-xl">
 				<span
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: Trusted content from backend
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is sanitized with DOMPurify
 					dangerouslySetInnerHTML={{
 						__html: DOMPurify.sanitize(article.highlighted_title),
 					}}
@@ -67,7 +67,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
 					<h4 className="mb-2 font-medium text-slate-900">{t("abstract")}</h4>
 					<p
 						className="text-slate-700 leading-relaxed"
-						// biome-ignore lint/security/noDangerouslySetInnerHtml: Trusted content from backend
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is sanitized with DOMPurify
 						dangerouslySetInnerHTML={{
 							__html: DOMPurify.sanitize(
 								article.highlighted_abstract || article.abstract,

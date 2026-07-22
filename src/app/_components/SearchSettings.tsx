@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { SearchField, SortOption } from "@/stores/searchStore";
+import type { SearchField, SortOption } from "@/lib/searchParams";
 
 interface SearchSettingsProps {
 	searchIn: SearchField[];
